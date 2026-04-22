@@ -9,7 +9,8 @@ services:
       - SPRING_DATASOURCE_PASSWORD=${DATABASE_PASSWORD}
       - SPRING_LIQUIBASE_URL=jdbc:postgresql://hostmint-postgresql:5432/hostMint
       - SPRING_ELASTICSEARCH_URIS=http://hostmint-elasticsearch:9200
-      - JHIPSTER_SECURITY_AUTHENTICATION_JWT_SECRET=${JWT_SECRET}
+      # CORRECTION MAJEURE ICI : Ajout de _BASE64_
+      - JHIPSTER_SECURITY_AUTHENTICATION_JWT_BASE64_SECRET=${JWT_SECRET}
       - MANAGEMENT_METRICS_EXPORT_PROMETHEUS_ENABLED=true
     healthcheck:
       test: ['CMD', 'curl', '-f', 'http://localhost:8080/management/health']
@@ -56,6 +57,7 @@ services:
     image: prom/prometheus:v3.10.0
     volumes:
       - prometheus_data:/prometheus
+      # Montage de dossier standard
       - ./prometheus-conf:/etc/prometheus
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
@@ -65,7 +67,7 @@ services:
     image: prom/alertmanager:v0.31.1
     volumes:
       - alertmanager_data:/alertmanager
-      # Montage du dossier entier
+      # Montage de dossier standard
       - ./alertmanager-conf:/etc/alertmanager
     command:
       - '--config.file=/etc/alertmanager/config.yml'
