@@ -1,6 +1,5 @@
 services:
   hostmint:
-    # On pointe vers l'image générée par ton GitHub Action (tout en minuscules)
     image: ghcr.io/jehudme/hostmint:latest
     environment:
       - _JAVA_OPTIONS=-Xmx512m -Xms256m
