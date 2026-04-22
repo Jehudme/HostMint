@@ -56,8 +56,7 @@ services:
     image: prom/prometheus:v3.10.0
     volumes:
       - prometheus_data:/prometheus
-      # Le chemin relatif standard, simple et efficace
-      - ./prometheus-conf/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./prometheus-conf:/etc/prometheus
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
       - '--storage.tsdb.path=/prometheus'
@@ -66,7 +65,8 @@ services:
     image: prom/alertmanager:v0.31.1
     volumes:
       - alertmanager_data:/alertmanager
-      - ./alertmanager-conf/config.yml:/etc/alertmanager/config.yml
+      # Montage du dossier entier
+      - ./alertmanager-conf:/etc/alertmanager
     command:
       - '--config.file=/etc/alertmanager/config.yml'
 
