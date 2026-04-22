@@ -56,17 +56,8 @@ services:
     image: prom/prometheus:v3.10.0
     volumes:
       - prometheus_data:/prometheus
-      - type: bind
-        source: ./prometheus-prod.yml
-        target: /etc/prometheus/prometheus.yml
-        content: |
-          global:
-            scrape_interval: 10s
-          scrape_configs:
-            - job_name: 'hostmint'
-              metrics_path: '/management/prometheus'
-              static_configs:
-                - targets: ['hostmint:8080']
+      # Le chemin relatif standard, simple et efficace
+      - ./prometheus-conf/prometheus.yml:/etc/prometheus/prometheus.yml
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
       - '--storage.tsdb.path=/prometheus'
@@ -75,17 +66,7 @@ services:
     image: prom/alertmanager:v0.31.1
     volumes:
       - alertmanager_data:/alertmanager
-      - type: bind
-        source: ./alertmanager-prod.yml
-        target: /etc/alertmanager/config.yml
-        content: |
-          route:
-            group_by: ['alertname']
-            receiver: 'web.hook'
-          receivers:
-            - name: 'web.hook'
-              webhook_configs:
-                - url: 'http://127.0.0.1:5001/'
+      - ./alertmanager-conf/config.yml:/etc/alertmanager/config.yml
     command:
       - '--config.file=/etc/alertmanager/config.yml'
 
