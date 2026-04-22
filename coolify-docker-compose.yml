@@ -4,9 +4,10 @@ services:
     environment:
       - _JAVA_OPTIONS=-Xmx512m -Xms256m
       - SPRING_PROFILES_ACTIVE=prod,api-docs
+      - JHIPSTER_SLEEP=10
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgresql:5432/hostMint
       - SPRING_DATASOURCE_USERNAME=hostMint
-      - SPRING_DATASOURCE_PASSWORD=
+      - SPRING_DATASOURCE_PASSWORD=${DATABASE_PASSWORD}
       - SPRING_LIQUIBASE_URL=jdbc:postgresql://postgresql:5432/hostMint
       - SPRING_ELASTICSEARCH_URIS=http://elasticsearch:9200
       - JHIPSTER_SECURITY_AUTHENTICATION_JWT_BASE64_SECRET=${JWT_SECRET}
@@ -15,7 +16,7 @@ services:
       - JHIPSTER_LOGGING_LOGSTASH_ENABLED=false
     healthcheck:
       test: ['CMD', 'curl', '-f', 'http://localhost:8080/management/health']
-      interval: 5s
+      interval: 10s
       timeout: 5s
       retries: 40
     depends_on:
@@ -28,7 +29,8 @@ services:
     image: postgres:18.3
     environment:
       - POSTGRES_USER=hostMint
-      - POSTGRES_HOST_AUTH_METHOD=trust
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
+      - POSTGRES_DB=hostMint
     volumes:
       - postgresql_data:/var/lib/postgresql/data
     healthcheck:
@@ -40,14 +42,14 @@ services:
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:9.2.5
     environment:
-      - ES_JAVA_OPTS=-Xms256m -Xmx256m
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
       - discovery.type=single-node
       - xpack.security.enabled=false
     volumes:
       - elasticsearch_data:/usr/share/elasticsearch/data
     healthcheck:
       test: ['CMD', 'curl', '-f', 'http://localhost:9200/_cluster/health?wait_for_status=green&timeout=10s']
-      interval: 5s
+      interval: 10s
       timeout: 10s
       retries: 10
 
