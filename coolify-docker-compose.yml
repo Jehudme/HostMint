@@ -4,50 +4,50 @@ services:
     environment:
       - _JAVA_OPTIONS=-Xmx512m -Xms256m
       - SPRING_PROFILES_ACTIVE=prod,api-docs
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://hostmint-postgresql:5432/hostMint
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgresql:5432/hostMint
       - SPRING_DATASOURCE_USERNAME=hostMint
-      - SPRING_DATASOURCE_PASSWORD=${DATABASE_PASSWORD}
-      - SPRING_LIQUIBASE_URL=jdbc:postgresql://hostmint-postgresql:5432/hostMint
-      - SPRING_ELASTICSEARCH_URIS=http://hostmint-elasticsearch:9200
+      - SPRING_DATASOURCE_PASSWORD=
+      - SPRING_LIQUIBASE_URL=jdbc:postgresql://postgresql:5432/hostMint
+      - SPRING_ELASTICSEARCH_URIS=http://elasticsearch:9200
       - JHIPSTER_SECURITY_AUTHENTICATION_JWT_BASE64_SECRET=${JWT_SECRET}
       - MANAGEMENT_METRICS_EXPORT_PROMETHEUS_ENABLED=true
       - MANAGEMENT_PROMETHEUS_METRICS_EXPORT_ENABLED=true
+      - JHIPSTER_LOGGING_LOGSTASH_ENABLED=false
     healthcheck:
       test: ['CMD', 'curl', '-f', 'http://localhost:8080/management/health']
-      interval: 10s
+      interval: 5s
       timeout: 5s
-      retries: 20
+      retries: 40
     depends_on:
-      hostmint-postgresql:
+      postgresql:
         condition: service_healthy
-      hostmint-elasticsearch:
+      elasticsearch:
         condition: service_healthy
 
-  hostmint-postgresql:
-    image: postgres:17.3
+  postgresql:
+    image: postgres:18.3
     environment:
       - POSTGRES_USER=hostMint
-      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
-      - POSTGRES_DB=hostMint
+      - POSTGRES_HOST_AUTH_METHOD=trust
     volumes:
-      - hostmint_db_data:/var/lib/postgresql/data
+      - postgresql_data:/var/lib/postgresql/data
     healthcheck:
       test: ['CMD-SHELL', 'pg_isready -U hostMint']
       interval: 5s
       timeout: 5s
       retries: 10
 
-  hostmint-elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.17.3
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:9.2.5
     environment:
-      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+      - ES_JAVA_OPTS=-Xms256m -Xmx256m
       - discovery.type=single-node
       - xpack.security.enabled=false
     volumes:
-      - hostmint_es_data:/usr/share/elasticsearch/data
+      - elasticsearch_data:/usr/share/elasticsearch/data
     healthcheck:
-      test: ['CMD', 'curl', '-f', 'http://localhost:9200/_cluster/health?wait_for_status=yellow&timeout=10s']
-      interval: 10s
+      test: ['CMD', 'curl', '-f', 'http://localhost:9200/_cluster/health?wait_for_status=green&timeout=10s']
+      interval: 5s
       timeout: 10s
       retries: 10
 
@@ -84,8 +84,8 @@ services:
 volumes:
   prometheus_data: {}
   grafana_data: {}
-  hostmint_db_data: {}
-  hostmint_es_data: {}
+  postgresql_data: {}
+  elasticsearch_data: {}
   alertmanager_data: {}
 
 configs:
