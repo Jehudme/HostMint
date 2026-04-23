@@ -1,4 +1,4 @@
-package com.hostmint.app.aop.audit;
+package com.hostmint.app.config.audit;
 
 import com.hostmint.app.domain.enumeration.LogLevel;
 import java.lang.annotation.*;
@@ -15,10 +15,9 @@ public @interface Audit {
 
     String message() default "";
 
-    // SpEL expressions to capture complex fields
-    String project() default ""; // e.g., "#projectDTO"
+    String project() default "";
 
-    String entityId() default ""; // e.g., "#id"
+    String entityId() default "";
 
-    String metadata() default ""; // e.g., "'Owner: ' + #projectDTO.owner"
+    String metadata() default "";
 }
