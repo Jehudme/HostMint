@@ -1,6 +1,5 @@
 import { Routes } from '@angular/router';
 
-import { ASC } from 'app/config/navigation.constants';
 import { UserRouteAccessService } from 'app/core/auth/user-route-access.service';
 
 import ProjectResolve from './route/project-routing-resolve.service';
@@ -9,9 +8,7 @@ const projectRoute: Routes = [
   {
     path: '',
     loadComponent: () => import('./list/project').then(m => m.Project),
-    data: {
-      defaultSort: `id,${ASC}`,
-    },
+    data: {},
     canActivate: [UserRouteAccessService],
   },
   {

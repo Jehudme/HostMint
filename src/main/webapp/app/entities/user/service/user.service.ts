@@ -34,7 +34,7 @@ export class UsersService {
 export class UserService extends UsersService {
   protected readonly http = inject(HttpClient);
 
-  find(id: number): Observable<IUser> {
+  find(id: string): Observable<IUser> {
     return this.http.get<IUser>(`${this.resourceUrl}/${encodeURIComponent(id)}`);
   }
 
@@ -48,7 +48,7 @@ export class UserService extends UsersService {
     return this.http.get<IUser[]>(this.resourceSearchUrl, { params: options }).pipe(catchError(() => scheduled([], asapScheduler)));
   }
 
-  getUserIdentifier(user: Pick<IUser, 'id'>): number {
+  getUserIdentifier(user: Pick<IUser, 'id'>): string {
     return user.id;
   }
 

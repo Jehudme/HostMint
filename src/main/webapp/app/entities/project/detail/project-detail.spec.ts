@@ -23,7 +23,7 @@ describe('Project Management Detail Component', () => {
             {
               path: '**',
               loadComponent: () => import('./project-detail').then(m => m.ProjectDetail),
-              resolve: { project: () => of({ id: 10300 }) },
+              resolve: { project: () => of({ id: '517762c3-0447-46f7-b25c-62db5ed7b0aa' }) },
             },
           ],
           withComponentInputBinding(),
@@ -46,7 +46,7 @@ describe('Project Management Detail Component', () => {
       const instance = await harness.navigateByUrl('/', ProjectDetail);
 
       // THEN
-      expect(instance.project()).toEqual(expect.objectContaining({ id: 10300 }));
+      expect(instance.project()).toEqual(expect.objectContaining({ id: '517762c3-0447-46f7-b25c-62db5ed7b0aa' }));
     });
   });
 

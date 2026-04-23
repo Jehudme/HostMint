@@ -46,7 +46,7 @@ class SecurityUtilsUnitTest {
 
     @Test
     void testGetCurrentUserId() {
-        var userId = 1L;
+        var userId = UUID.randomUUID();
         var securityContext = SecurityContextHolder.createEmptyContext();
         var now = Instant.now();
         var jwt = Jwt.withTokenValue("token")

@@ -1,6 +1,6 @@
 export interface IUserManagement {
   login: string;
-  id?: number | null;
+  id?: string | null;
   firstName?: string | null;
   lastName?: string | null;
   email?: string;
@@ -16,7 +16,7 @@ export interface IUserManagement {
 export class User implements IUserManagement {
   constructor(
     public login: string,
-    public id?: number | null,
+    public id?: string | null,
     public firstName?: string | null,
     public lastName?: string | null,
     public email?: string,

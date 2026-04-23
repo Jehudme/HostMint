@@ -13,7 +13,7 @@ public class RequestLogTestSamples {
 
     public static RequestLog getRequestLogSample1() {
         return new RequestLog()
-            .id(1L)
+            .id(UUID.fromString("23d8dc04-a48b-45d9-a01d-4b728f0ad4aa"))
             .correlationId("correlationId1")
             .path("path1")
             .statusCode(1)
@@ -26,7 +26,7 @@ public class RequestLogTestSamples {
 
     public static RequestLog getRequestLogSample2() {
         return new RequestLog()
-            .id(2L)
+            .id(UUID.fromString("ad79f240-3727-46c3-b89f-2cf6ebd74367"))
             .correlationId("correlationId2")
             .path("path2")
             .statusCode(2)
@@ -39,7 +39,7 @@ public class RequestLogTestSamples {
 
     public static RequestLog getRequestLogRandomSampleGenerator() {
         return new RequestLog()
-            .id(longCount.incrementAndGet())
+            .id(UUID.randomUUID())
             .correlationId(UUID.randomUUID().toString())
             .path(UUID.randomUUID().toString())
             .statusCode(intCount.incrementAndGet())

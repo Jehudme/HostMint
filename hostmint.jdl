@@ -19,41 +19,22 @@ application {
     searchEngine elasticsearch
     testFrameworks [cypress]
     serviceDiscoveryType no
-
-    // FORCING UUID APP-WIDE (Fixes v9 Sample Data Bug)
-    pkType uuid
-    cacheProvider caffeine
+    // Note: pkType must be set in .yo-rc.json, not here in JDL config for v9
   }
   entities Project, AuditLog, RequestLog
 }
 
-/**
- * Deployment Configuration
- */
-deployment {
-  deploymentType docker-compose
-  dockerRepositoryName "ghcr.io/jehudme"
-}
-
 /* ---------------------------------------------------------
-   ENUMERATIONS
+   GLOBAL DIRECTIVES
    --------------------------------------------------------- */
 
-enum LogLevel {
-  INFO, WARN, ERROR, DEBUG, TRACE
-}
-
-enum HttpMethod {
-  GET, POST, PUT, DELETE, PATCH, HEAD, OPTIONS
-}
+// Use UUID for all primary keys
+use UUID for *
 
 /* ---------------------------------------------------------
    ENTITIES
    --------------------------------------------------------- */
 
-/**
- * Represents a user-hosted project within HostMint.
- */
 entity Project {
   name String required minlength(2) maxlength(140)
   projectKey String required unique minlength(2) maxlength(20) pattern(/^[A-Z0-9_]+$/)
@@ -61,10 +42,6 @@ entity Project {
   updatedAt Instant
 }
 
-/**
- * Detailed audit logs for business actions.
- * @readOnly prevents accidental modifications via API.
- */
 @readOnly
 entity AuditLog {
   action String required maxlength(120)
@@ -80,9 +57,6 @@ entity AuditLog {
   createdAt Instant
 }
 
-/**
- * Technical logs for monitoring HTTP traffic and performance.
- */
 @readOnly
 entity RequestLog {
   correlationId String required maxlength(128)
@@ -97,40 +71,33 @@ entity RequestLog {
   createdAt Instant
 }
 
+enum LogLevel {
+  INFO, WARN, ERROR, DEBUG, TRACE
+}
+
+enum HttpMethod {
+  GET, POST, PUT, DELETE, PATCH, HEAD, OPTIONS
+}
+
 /* ---------------------------------------------------------
    RELATIONSHIPS
    --------------------------------------------------------- */
 
 relationship ManyToOne {
-  // Owner of the project (Links UUID to UUID)
   Project{owner(login) required} to User with builtInEntity
-
-  // Actor who performed the audited action
   AuditLog{actor(login)} to User with builtInEntity
-
-  // Actor who made the HTTP request
   RequestLog{actor(login)} to User with builtInEntity
-
-  // Optional links to a specific project context
   AuditLog{project(projectKey)} to Project
   RequestLog{project(projectKey)} to Project
 }
 
 /* ---------------------------------------------------------
-   OPTIONS & SERVICES
+   OPTIONS
    --------------------------------------------------------- */
 
-// Use MapStruct for DTOs
 dto * with mapstruct
-
-// Use Service Implementation pattern
 service * with serviceImpl
-
-// Enable pagination for all entities
-pagination * with pagination
-
-// Enable advanced filtering (Criteria API)
-filter Project, AuditLog, RequestLog
-
-// Enable Elasticsearch for full-text search
+// FIX: Using 'paginate' keyword instead of 'pagination' to satisfy the parser
+paginate * with pagination
+filter *
 search Project, AuditLog, RequestLog with elasticsearch

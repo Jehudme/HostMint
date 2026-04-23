@@ -22,6 +22,7 @@ import jakarta.persistence.EntityManager;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.UUID;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -178,7 +179,7 @@ class RequestLogResourceIT {
             .perform(get(ENTITY_API_URL + "?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(requestLog.getId().intValue())))
+            .andExpect(jsonPath("$.[*].id").value(hasItem(requestLog.getId().toString())))
             .andExpect(jsonPath("$.[*].correlationId").value(hasItem(DEFAULT_CORRELATION_ID)))
             .andExpect(jsonPath("$.[*].method").value(hasItem(DEFAULT_METHOD.toString())))
             .andExpect(jsonPath("$.[*].path").value(hasItem(DEFAULT_PATH)))
@@ -219,7 +220,7 @@ class RequestLogResourceIT {
             .perform(get(ENTITY_API_URL_ID, requestLog.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-            .andExpect(jsonPath("$.id").value(requestLog.getId().intValue()))
+            .andExpect(jsonPath("$.id").value(requestLog.getId().toString()))
             .andExpect(jsonPath("$.correlationId").value(DEFAULT_CORRELATION_ID))
             .andExpect(jsonPath("$.method").value(DEFAULT_METHOD.toString()))
             .andExpect(jsonPath("$.path").value(DEFAULT_PATH))
@@ -238,13 +239,9 @@ class RequestLogResourceIT {
         // Initialize the database
         insertedRequestLog = requestLogRepository.saveAndFlush(requestLog);
 
-        Long id = requestLog.getId();
+        UUID id = requestLog.getId();
 
         defaultRequestLogFiltering("id.equals=" + id, "id.notEquals=" + id);
-
-        defaultRequestLogFiltering("id.greaterThanOrEqual=" + id, "id.greaterThan=" + id);
-
-        defaultRequestLogFiltering("id.lessThanOrEqual=" + id, "id.lessThan=" + id);
     }
 
     @Test
@@ -791,12 +788,12 @@ class RequestLogResourceIT {
         em.flush();
         requestLog.setActor(actor);
         requestLogRepository.saveAndFlush(requestLog);
-        Long actorId = actor.getId();
+        UUID actorId = actor.getId();
         // Get all the requestLogList where actor equals to actorId
         defaultRequestLogShouldBeFound("actorId.equals=" + actorId);
 
-        // Get all the requestLogList where actor equals to (actorId + 1)
-        defaultRequestLogShouldNotBeFound("actorId.equals=" + (actorId + 1));
+        // Get all the requestLogList where actor equals to UUID.randomUUID()
+        defaultRequestLogShouldNotBeFound("actorId.equals=" + UUID.randomUUID());
     }
 
     @Test
@@ -813,12 +810,12 @@ class RequestLogResourceIT {
         em.flush();
         requestLog.setProject(project);
         requestLogRepository.saveAndFlush(requestLog);
-        Long projectId = project.getId();
+        UUID projectId = project.getId();
         // Get all the requestLogList where project equals to projectId
         defaultRequestLogShouldBeFound("projectId.equals=" + projectId);
 
-        // Get all the requestLogList where project equals to (projectId + 1)
-        defaultRequestLogShouldNotBeFound("projectId.equals=" + (projectId + 1));
+        // Get all the requestLogList where project equals to UUID.randomUUID()
+        defaultRequestLogShouldNotBeFound("projectId.equals=" + UUID.randomUUID());
     }
 
     private void defaultRequestLogFiltering(String shouldBeFound, String shouldNotBeFound) throws Exception {
@@ -834,7 +831,7 @@ class RequestLogResourceIT {
             .perform(get(ENTITY_API_URL + "?sort=id,desc&" + filter))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(requestLog.getId().intValue())))
+            .andExpect(jsonPath("$.[*].id").value(hasItem(requestLog.getId().toString())))
             .andExpect(jsonPath("$.[*].correlationId").value(hasItem(DEFAULT_CORRELATION_ID)))
             .andExpect(jsonPath("$.[*].method").value(hasItem(DEFAULT_METHOD.toString())))
             .andExpect(jsonPath("$.[*].path").value(hasItem(DEFAULT_PATH)))
@@ -877,7 +874,7 @@ class RequestLogResourceIT {
     @Transactional
     void getNonExistingRequestLog() throws Exception {
         // Get the requestLog
-        restRequestLogMockMvc.perform(get(ENTITY_API_URL_ID, Long.MAX_VALUE)).andExpect(status().isNotFound());
+        restRequestLogMockMvc.perform(get(ENTITY_API_URL_ID, UUID.randomUUID().toString())).andExpect(status().isNotFound());
     }
 
     @Test
@@ -892,7 +889,7 @@ class RequestLogResourceIT {
             .perform(get(ENTITY_SEARCH_API_URL + "?query=id:" + requestLog.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(requestLog.getId().intValue())))
+            .andExpect(jsonPath("$.[*].id").value(hasItem(requestLog.getId().toString())))
             .andExpect(jsonPath("$.[*].correlationId").value(hasItem(DEFAULT_CORRELATION_ID)))
             .andExpect(jsonPath("$.[*].method").value(hasItem(DEFAULT_METHOD.toString())))
             .andExpect(jsonPath("$.[*].path").value(hasItem(DEFAULT_PATH)))

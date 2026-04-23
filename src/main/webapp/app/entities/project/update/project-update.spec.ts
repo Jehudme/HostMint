@@ -48,11 +48,11 @@ describe('Project Management Update Component', () => {
 
   describe('ngOnInit', () => {
     it('should call User query and add missing value', () => {
-      const project: IProject = { id: 3319 };
-      const owner: IUser = { id: 3944 };
+      const project: IProject = { id: '5ff6b3ae-e7f8-4d04-a538-babd8e1e0e80' };
+      const owner: IUser = { id: '1344246c-16a7-46d1-bb61-2043f965c8d5' };
       project.owner = owner;
 
-      const userCollection: IUser[] = [{ id: 3944 }];
+      const userCollection: IUser[] = [{ id: '1344246c-16a7-46d1-bb61-2043f965c8d5' }];
       vitest.spyOn(userService, 'query').mockReturnValue(of(new HttpResponse({ body: userCollection })));
       const additionalUsers = [owner];
       const expectedCollection: IUser[] = [...additionalUsers, ...userCollection];
@@ -70,8 +70,8 @@ describe('Project Management Update Component', () => {
     });
 
     it('should update editForm', () => {
-      const project: IProject = { id: 3319 };
-      const owner: IUser = { id: 3944 };
+      const project: IProject = { id: '5ff6b3ae-e7f8-4d04-a538-babd8e1e0e80' };
+      const owner: IUser = { id: '1344246c-16a7-46d1-bb61-2043f965c8d5' };
       project.owner = owner;
 
       activatedRoute.data = of({ project });
@@ -86,7 +86,7 @@ describe('Project Management Update Component', () => {
     it('should call update service on save for existing entity', () => {
       // GIVEN
       const saveSubject = new Subject<IProject>();
-      const project = { id: 10300 };
+      const project = { id: '517762c3-0447-46f7-b25c-62db5ed7b0aa' };
       vitest.spyOn(projectFormService, 'getProject').mockReturnValue(project);
       vitest.spyOn(projectService, 'update').mockReturnValue(saveSubject);
       vitest.spyOn(comp, 'previousState');
@@ -109,7 +109,7 @@ describe('Project Management Update Component', () => {
     it('should call create service on save for new entity', () => {
       // GIVEN
       const saveSubject = new Subject<IProject>();
-      const project = { id: 10300 };
+      const project = { id: '517762c3-0447-46f7-b25c-62db5ed7b0aa' };
       vitest.spyOn(projectFormService, 'getProject').mockReturnValue({ id: null });
       vitest.spyOn(projectService, 'create').mockReturnValue(saveSubject);
       vitest.spyOn(comp, 'previousState');
@@ -132,7 +132,7 @@ describe('Project Management Update Component', () => {
     it('should set isSaving to false on error', () => {
       // GIVEN
       const saveSubject = new Subject<IProject>();
-      const project = { id: 10300 };
+      const project = { id: '517762c3-0447-46f7-b25c-62db5ed7b0aa' };
       vitest.spyOn(projectService, 'update').mockReturnValue(saveSubject);
       vitest.spyOn(comp, 'previousState');
       activatedRoute.data = of({ project });
@@ -153,8 +153,8 @@ describe('Project Management Update Component', () => {
   describe('Compare relationships', () => {
     describe('compareUser', () => {
       it('should forward to userService', () => {
-        const entity = { id: 3944 };
-        const entity2 = { id: 6275 };
+        const entity = { id: '1344246c-16a7-46d1-bb61-2043f965c8d5' };
+        const entity2 = { id: '1e61df13-b2d3-459d-875e-5607a4ccdbdb' };
         vitest.spyOn(userService, 'compareUser');
         comp.compareUser(entity, entity2);
         expect(userService.compareUser).toHaveBeenCalledWith(entity, entity2);

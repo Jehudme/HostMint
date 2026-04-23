@@ -52,7 +52,7 @@ export class RequestLogsService {
 export class RequestLogService extends RequestLogsService {
   protected readonly http = inject(HttpClient);
 
-  find(id: number): Observable<IRequestLog> {
+  find(id: string): Observable<IRequestLog> {
     return this.http
       .get<RestRequestLog>(`${this.resourceUrl}/${encodeURIComponent(id)}`)
       .pipe(map(res => this.convertResponseFromServer(res)));
@@ -73,7 +73,7 @@ export class RequestLogService extends RequestLogsService {
     );
   }
 
-  getRequestLogIdentifier(requestLog: Pick<IRequestLog, 'id'>): number {
+  getRequestLogIdentifier(requestLog: Pick<IRequestLog, 'id'>): string {
     return requestLog.id;
   }
 

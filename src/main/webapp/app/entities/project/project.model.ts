@@ -3,7 +3,7 @@ import dayjs from 'dayjs/esm';
 import { IUser } from 'app/entities/user/user.model';
 
 export interface IProject {
-  id: number;
+  id: string;
   name?: string | null;
   projectKey?: string | null;
   createdAt?: dayjs.Dayjs | null;

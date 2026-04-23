@@ -2,6 +2,7 @@ package com.hostmint.app.service;
 
 import com.hostmint.app.service.dto.AuditLogDTO;
 import java.util.Optional;
+import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -47,14 +48,14 @@ public interface AuditLogService {
      * @param id the id of the entity.
      * @return the entity.
      */
-    Optional<AuditLogDTO> findOne(Long id);
+    Optional<AuditLogDTO> findOne(UUID id);
 
     /**
      * Delete the "id" auditLog.
      *
      * @param id the id of the entity.
      */
-    void delete(Long id);
+    void delete(UUID id);
 
     /**
      * Search for the auditLog corresponding to the query.

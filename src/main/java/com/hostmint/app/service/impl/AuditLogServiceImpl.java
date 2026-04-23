@@ -7,6 +7,7 @@ import com.hostmint.app.service.AuditLogService;
 import com.hostmint.app.service.dto.AuditLogDTO;
 import com.hostmint.app.service.mapper.AuditLogMapper;
 import java.util.Optional;
+import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -82,13 +83,13 @@ public class AuditLogServiceImpl implements AuditLogService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<AuditLogDTO> findOne(Long id) {
+    public Optional<AuditLogDTO> findOne(UUID id) {
         LOG.debug("Request to get AuditLog : {}", id);
         return auditLogRepository.findOneWithEagerRelationships(id).map(auditLogMapper::toDto);
     }
 
     @Override
-    public void delete(Long id) {
+    public void delete(UUID id) {
         LOG.debug("Request to delete AuditLog : {}", id);
         auditLogRepository.deleteById(id);
         auditLogSearchRepository.deleteFromIndexById(id);

@@ -5,7 +5,7 @@ import { IProject } from 'app/entities/project/project.model';
 import { IUser } from 'app/entities/user/user.model';
 
 export interface IAuditLog {
-  id: number;
+  id: string;
   action?: string | null;
   entityName?: string | null;
   entityId?: string | null;

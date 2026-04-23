@@ -43,7 +43,7 @@ import { ProjectService } from '../service/project.service';
   ],
 })
 export class Project implements OnInit {
-  private static readonly NOT_SORTABLE_FIELDS_AFTER_SEARCH = ['name', 'projectKey'];
+  private static readonly NOT_SORTABLE_FIELDS_AFTER_SEARCH = ['id', 'name', 'projectKey'];
 
   subscription: Subscription | null = null;
   readonly projects = signal<IProject[]>([]);
@@ -87,7 +87,7 @@ export class Project implements OnInit {
     });
   }
 
-  trackId = (item: IProject): number => this.projectService.getProjectIdentifier(item);
+  trackId = (item: IProject): string => this.projectService.getProjectIdentifier(item);
 
   ngOnInit(): void {
     this.subscription = combineLatest([this.activatedRoute.queryParamMap, this.activatedRoute.data])
@@ -110,7 +110,7 @@ export class Project implements OnInit {
   }
 
   getDefaultSortState(): SortState {
-    return this.sortService.parseSortParam(this.activatedRoute.snapshot.data[DEFAULT_SORT_DATA]);
+    return {};
   }
 
   delete(project: IProject): void {

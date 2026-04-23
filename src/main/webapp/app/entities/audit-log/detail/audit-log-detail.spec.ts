@@ -26,7 +26,7 @@ describe('AuditLog Management Detail Component', () => {
             {
               path: '**',
               loadComponent: () => import('./audit-log-detail').then(m => m.AuditLogDetail),
-              resolve: { auditLog: () => of({ id: 25090 }) },
+              resolve: { auditLog: () => of({ id: 'ccc9ca42-f95c-4b2b-a00d-7c54df66be4c' }) },
             },
           ],
           withComponentInputBinding(),
@@ -51,7 +51,7 @@ describe('AuditLog Management Detail Component', () => {
       const instance = await harness.navigateByUrl('/', AuditLogDetail);
 
       // THEN
-      expect(instance.auditLog()).toEqual(expect.objectContaining({ id: 25090 }));
+      expect(instance.auditLog()).toEqual(expect.objectContaining({ id: 'ccc9ca42-f95c-4b2b-a00d-7c54df66be4c' }));
     });
   });
 

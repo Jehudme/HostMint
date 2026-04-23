@@ -73,12 +73,14 @@ describe('AuditLog Management Component', () => {
     // WHEN
     TestBed.tick();
     const req = httpMock.expectOne({ method: 'GET' });
-    req.flush([{ id: 25090 }], { headers: { link: '<http://localhost/api/foo?page=1&size=20>; rel="next"' } });
+    req.flush([{ id: 'ccc9ca42-f95c-4b2b-a00d-7c54df66be4c' }], {
+      headers: { link: '<http://localhost/api/foo?page=1&size=20>; rel="next"' },
+    });
     await vitest.runAllTimersAsync();
 
     // THEN
     expect(comp.isLoading()).toEqual(false);
-    expect(comp.auditLogs()[0]).toEqual(expect.objectContaining({ id: 25090 }));
+    expect(comp.auditLogs()[0]).toEqual(expect.objectContaining({ id: 'ccc9ca42-f95c-4b2b-a00d-7c54df66be4c' }));
   });
 
   it('should cancel previous requests when loading a new page', async () => {
@@ -91,13 +93,15 @@ describe('AuditLog Management Component', () => {
     comp.load();
     await vitest.runAllTimersAsync();
     const req2 = httpMock.expectOne({ method: 'GET' });
-    req2.flush([{ id: 25090 }], { headers: { link: '<http://localhost/api/foo?page=1&size=20>; rel="next"' } });
+    req2.flush([{ id: 'ccc9ca42-f95c-4b2b-a00d-7c54df66be4c' }], {
+      headers: { link: '<http://localhost/api/foo?page=1&size=20>; rel="next"' },
+    });
     await vitest.runAllTimersAsync();
 
     // THEN
     expect(req.cancelled).toBeTruthy();
     expect(comp.isLoading()).toEqual(false);
-    expect(comp.auditLogs()[0]).toEqual(expect.objectContaining({ id: 25090 }));
+    expect(comp.auditLogs()[0]).toEqual(expect.objectContaining({ id: 'ccc9ca42-f95c-4b2b-a00d-7c54df66be4c' }));
   });
 
   it('should not fail on resource error state', async () => {
@@ -115,16 +119,18 @@ describe('AuditLog Management Component', () => {
     comp.load();
     TestBed.tick();
     const successReq = httpMock.expectOne({ method: 'GET' });
-    successReq.flush([{ id: 25090 }], { headers: { link: '<http://localhost/api/foo?page=1&size=20>; rel="next"' } });
+    successReq.flush([{ id: 'ccc9ca42-f95c-4b2b-a00d-7c54df66be4c' }], {
+      headers: { link: '<http://localhost/api/foo?page=1&size=20>; rel="next"' },
+    });
     await vitest.runAllTimersAsync();
 
     // THEN - subscription is still alive and second load succeeds
-    expect(comp.auditLogs()[0]).toEqual(expect.objectContaining({ id: 25090 }));
+    expect(comp.auditLogs()[0]).toEqual(expect.objectContaining({ id: 'ccc9ca42-f95c-4b2b-a00d-7c54df66be4c' }));
   });
 
   describe('trackId', () => {
     it('should forward to auditLogService', () => {
-      const entity = { id: 25090 };
+      const entity = { id: 'ccc9ca42-f95c-4b2b-a00d-7c54df66be4c' };
       vitest.spyOn(service, 'getAuditLogIdentifier');
       const id = comp.trackId(entity);
       expect(service.getAuditLogIdentifier).toHaveBeenCalledWith(entity);

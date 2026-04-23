@@ -7,6 +7,7 @@ import com.hostmint.app.service.ProjectService;
 import com.hostmint.app.service.dto.ProjectDTO;
 import com.hostmint.app.service.mapper.ProjectMapper;
 import java.util.Optional;
+import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -82,13 +83,13 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<ProjectDTO> findOne(Long id) {
+    public Optional<ProjectDTO> findOne(UUID id) {
         LOG.debug("Request to get Project : {}", id);
         return projectRepository.findOneWithEagerRelationships(id).map(projectMapper::toDto);
     }
 
     @Override
-    public void delete(Long id) {
+    public void delete(UUID id) {
         LOG.debug("Request to delete Project : {}", id);
         projectRepository.deleteById(id);
         projectSearchRepository.deleteFromIndexById(id);

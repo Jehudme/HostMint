@@ -227,13 +227,13 @@ describe('Project e2e test', () => {
       cy.get(`[data-cy="projectKey"]`).type('63NDAS');
       cy.get(`[data-cy="projectKey"]`).should('have.value', '63NDAS');
 
-      cy.get(`[data-cy="createdAt"]`).type('2026-04-21T02:46');
+      cy.get(`[data-cy="createdAt"]`).type('2026-04-22T06:20');
       cy.get(`[data-cy="createdAt"]`).blur();
-      cy.get(`[data-cy="createdAt"]`).should('have.value', '2026-04-21T02:46');
+      cy.get(`[data-cy="createdAt"]`).should('have.value', '2026-04-22T06:20');
 
-      cy.get(`[data-cy="updatedAt"]`).type('2026-04-21T22:22');
+      cy.get(`[data-cy="updatedAt"]`).type('2026-04-23T01:56');
       cy.get(`[data-cy="updatedAt"]`).blur();
-      cy.get(`[data-cy="updatedAt"]`).should('have.value', '2026-04-21T22:22');
+      cy.get(`[data-cy="updatedAt"]`).should('have.value', '2026-04-23T01:56');
 
       cy.get(`[data-cy="owner"]`).select(1);
 

@@ -42,6 +42,7 @@ import { RequestLogService } from '../service/request-log.service';
 })
 export class RequestLog implements OnInit {
   private static readonly NOT_SORTABLE_FIELDS_AFTER_SEARCH = [
+    'id',
     'correlationId',
     'method',
     'path',
@@ -92,7 +93,7 @@ export class RequestLog implements OnInit {
     });
   }
 
-  trackId = (item: IRequestLog): number => this.requestLogService.getRequestLogIdentifier(item);
+  trackId = (item: IRequestLog): string => this.requestLogService.getRequestLogIdentifier(item);
 
   ngOnInit(): void {
     this.subscription = combineLatest([this.activatedRoute.queryParamMap, this.activatedRoute.data])
@@ -115,7 +116,7 @@ export class RequestLog implements OnInit {
   }
 
   getDefaultSortState(): SortState {
-    return this.sortService.parseSortParam(this.activatedRoute.snapshot.data[DEFAULT_SORT_DATA]);
+    return {};
   }
 
   load(): void {

@@ -1,6 +1,5 @@
 import { Routes } from '@angular/router';
 
-import { ASC } from 'app/config/navigation.constants';
 import { UserRouteAccessService } from 'app/core/auth/user-route-access.service';
 
 import RequestLogResolve from './route/request-log-routing-resolve.service';
@@ -9,9 +8,7 @@ const requestLogRoute: Routes = [
   {
     path: '',
     loadComponent: () => import('./list/request-log').then(m => m.RequestLog),
-    data: {
-      defaultSort: `id,${ASC}`,
-    },
+    data: {},
     canActivate: [UserRouteAccessService],
   },
   {

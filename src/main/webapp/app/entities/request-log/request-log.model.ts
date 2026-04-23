@@ -5,7 +5,7 @@ import { IProject } from 'app/entities/project/project.model';
 import { IUser } from 'app/entities/user/user.model';
 
 export interface IRequestLog {
-  id: number;
+  id: string;
   correlationId?: string | null;
   method?: keyof typeof HttpMethod | null;
   path?: string | null;

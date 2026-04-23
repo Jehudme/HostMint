@@ -3,6 +3,7 @@ package com.hostmint.app.repository;
 import com.hostmint.app.domain.RequestLog;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.*;
@@ -13,11 +14,11 @@ import org.springframework.stereotype.Repository;
  * Spring Data JPA repository for the RequestLog entity.
  */
 @Repository
-public interface RequestLogRepository extends JpaRepository<RequestLog, Long>, JpaSpecificationExecutor<RequestLog> {
+public interface RequestLogRepository extends JpaRepository<RequestLog, UUID>, JpaSpecificationExecutor<RequestLog> {
     @Query("select requestLog from RequestLog requestLog where requestLog.actor.login = ?#{authentication.name}")
     List<RequestLog> findByActorIsCurrentUser();
 
-    default Optional<RequestLog> findOneWithEagerRelationships(Long id) {
+    default Optional<RequestLog> findOneWithEagerRelationships(UUID id) {
         return this.findOneWithToOneRelationships(id);
     }
 
@@ -41,5 +42,5 @@ public interface RequestLogRepository extends JpaRepository<RequestLog, Long>, J
     @Query(
         "select requestLog from RequestLog requestLog left join fetch requestLog.actor left join fetch requestLog.project where requestLog.id =:id"
     )
-    Optional<RequestLog> findOneWithToOneRelationships(@Param("id") Long id);
+    Optional<RequestLog> findOneWithToOneRelationships(@Param("id") UUID id);
 }
