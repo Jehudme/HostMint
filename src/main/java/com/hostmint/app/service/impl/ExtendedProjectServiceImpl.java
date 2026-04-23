@@ -16,47 +16,42 @@ import org.springframework.transaction.annotation.Transactional;
 @Primary
 public class ExtendedProjectServiceImpl extends ProjectServiceImpl {
 
+    // 1. Add this field so we can call flush()
+    private final ProjectRepository projectRepository;
+
     public ExtendedProjectServiceImpl(
         ProjectRepository projectRepository,
         ProjectMapper projectMapper,
         ProjectSearchRepository projectSearchRepository
     ) {
         super(projectRepository, projectMapper, projectSearchRepository);
+        // 2. Assign it
+        this.projectRepository = projectRepository;
     }
 
     @Override
-    @Audit(
-        action = "PROJECT_CREATED",
-        entity = "#result.name", // Captures real name from the saved object
-        entityId = "#result.id", // Captures the new ID after generation
-        message = "'Successfully created project'",
-        project = "#result" // Passes the saved DTO
-    )
+    @Audit(action = "PROJECT_CREATE", entity = "#result.name", entityId = "#result.id", message = "'Created project'", project = "#result")
     public ProjectDTO save(ProjectDTO projectDTO) {
-        return super.save(projectDTO);
+        // 3. Save it normally (queues the insert)
+        ProjectDTO savedResult = super.save(projectDTO);
+
+        // 4. THE MAGIC LINE: Force Hibernate to push the insert to the database NOW
+        projectRepository.flush();
+
+        return savedResult;
     }
 
     @Override
     @Audit(
-        action = "PROJECT_UPDATED",
-        entity = "#projectDTO.name", // Uses name from the request
-        entityId = "#projectDTO.id",
-        message = "'Updated project details'",
-        project = "#projectDTO"
-    )
-    public ProjectDTO update(ProjectDTO projectDTO) {
-        return super.update(projectDTO);
-    }
-
-    @Override
-    @Audit(
-        action = "PROJECT_DELETED",
-        entity = "'Project'", // Since it's deleted, we use a static string
-        entityId = "#id", // Captures the Long UUID passed to the method
+        action = "PROJECT_DELETE",
+        entity = "'Project'",
+        entityId = "#id",
         level = LogLevel.WARN,
-        message = "'Permanently removed project'"
+        message = "'Deleted project permanently'"
     )
     public void delete(UUID id) {
+        // Note: ensure this ID type matches your UUID refactor if needed
         super.delete(id);
+        projectRepository.flush(); // Good practice to flush here too for the same reason
     }
 }

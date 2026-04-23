@@ -19,4 +19,6 @@ public interface InternalAuditService {
 
     // Full signature
     void log(String action, String entityName, UUID entityId, LogLevel level, String message, ProjectDTO project, String metadata);
+
+    void logFailure(String action, String entityName, UUID entityId, LogLevel level, String message, ProjectDTO project, String metadata);
 }
