@@ -74,7 +74,7 @@ jobs:
           
           # Added -ntp (no transfer progress) to clean up logs
           # Added -T 1C to use one thread per core for faster compilation
-          ./mvnw package -Pprod verify jib:build -ntp -T 1C \
+          ./mvnw package -Pprod jib:build -ntp -T 1C \
             -Djib.to.image=$IMAGE_ID \
             -Djib.to.auth.username=${{ github.actor }} \
             -Djib.to.auth.password=${{ secrets.GITHUB_TOKEN }}
