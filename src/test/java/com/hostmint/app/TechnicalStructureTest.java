@@ -18,21 +18,22 @@ class TechnicalStructureTest {
         .consideringAllDependencies()
         .layer("Config").definedBy("..config..")
         .layer("Web").definedBy("..web..")
-        .optionalLayer("Service").definedBy("..service..")
+        .layer("Service").definedBy("..service..")
         .layer("Security").definedBy("..security..")
-        .optionalLayer("Persistence").definedBy("..repository..")
+        .layer("Persistence").definedBy("..repository..")
         .layer("Domain").definedBy("..domain..")
+        // 1. Define the AOP layer
+        .layer("Aop").definedBy("..aop..")
 
         .whereLayer("Config").mayNotBeAccessedByAnyLayer()
         .whereLayer("Web").mayOnlyBeAccessedByLayers("Config")
-        .whereLayer("Service").mayOnlyBeAccessedByLayers("Web", "Config")
+
+        // 2. Allow the Aop layer to access Services (needed for InternalAuditService)
+        .whereLayer("Service").mayOnlyBeAccessedByLayers("Web", "Config", "Aop")
+
         .whereLayer("Security").mayOnlyBeAccessedByLayers("Config", "Service", "Web")
         .whereLayer("Persistence").mayOnlyBeAccessedByLayers("Service", "Security", "Web", "Config")
-        .whereLayer("Domain").mayOnlyBeAccessedByLayers("Persistence", "Service", "Security", "Web", "Config")
 
-        .ignoreDependency(belongToAnyOf(HostMintApp.class), alwaysTrue())
-        .ignoreDependency(alwaysTrue(), belongToAnyOf(
-            com.hostmint.app.config.Constants.class,
-            com.hostmint.app.config.ApplicationProperties.class
-        ));
+        // 3. Allow the Aop layer to access Domain (needed for LogLevel enum)
+        .whereLayer("Domain").mayOnlyBeAccessedByLayers("Persistence", "Service", "Security", "Web", "Config", "Aop");
 }
