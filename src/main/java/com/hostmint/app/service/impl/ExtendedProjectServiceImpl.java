@@ -6,6 +6,7 @@ import com.hostmint.app.repository.ProjectRepository;
 import com.hostmint.app.repository.search.ProjectSearchRepository;
 import com.hostmint.app.service.dto.ProjectDTO;
 import com.hostmint.app.service.mapper.ProjectMapper;
+import java.util.UUID;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,11 +52,11 @@ public class ExtendedProjectServiceImpl extends ProjectServiceImpl {
     @Audit(
         action = "PROJECT_DELETED",
         entity = "'Project'", // Since it's deleted, we use a static string
-        entityId = "#id", // Captures the Long ID passed to the method
+        entityId = "#id", // Captures the Long UUID passed to the method
         level = LogLevel.WARN,
         message = "'Permanently removed project'"
     )
-    public void delete(Long id) {
+    public void delete(UUID id) {
         super.delete(id);
     }
 }
