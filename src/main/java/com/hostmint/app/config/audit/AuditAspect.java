@@ -1,4 +1,4 @@
-package com.hostmint.app.aop.audit;
+package com.hostmint.app.config.audit;
 
 import com.hostmint.app.domain.enumeration.LogLevel;
 import com.hostmint.app.service.InternalAuditService;
@@ -30,18 +30,13 @@ public class AuditAspect {
 
     @Around("@annotation(auditAnnotation)")
     public Object audit(ProceedingJoinPoint joinPoint, Audit auditAnnotation) throws Throwable {
-        // 1. Prepare initial context with method arguments
         StandardEvaluationContext context = getContext(joinPoint);
 
         Object result;
         try {
-            // 2. Execute the actual business logic
             result = joinPoint.proceed();
-
-            // 3. Add the result to the context so we can use #result in the annotation
             context.setVariable("result", result);
 
-            // 4. Resolve dynamic values (Success Case)
             String action = auditAnnotation.action();
             String entityName = resolve(auditAnnotation.entity(), context, String.class, "System");
             String message = resolve(auditAnnotation.message(), context, String.class, "Success");
@@ -49,45 +44,44 @@ public class AuditAspect {
             UUID entityId = resolveIdAsUuid(auditAnnotation.entityId(), context);
             ProjectDTO project = resolve(auditAnnotation.project(), context, ProjectDTO.class, null);
 
-            // 5. Log Success to Database
             auditService.log(action, entityName, entityId, auditAnnotation.level(), message, project, metadata);
 
             return result;
         } catch (Throwable e) {
-            // 6. LOG ERROR TO CONSOLE IMMEDIATELY
             LOG.error(
                 "AUDIT FAILURE: Action [{}] on Entity [{}] failed. Reason: {}",
                 auditAnnotation.action(),
                 auditAnnotation.entity(),
                 e.getMessage(),
-                e // Prints full stack trace
+                e
             );
 
-            // 7. Resolve values for Failure Log (Note: #result is null here)
             String action = auditAnnotation.action() + "_FAILED";
             String entityName = resolve(auditAnnotation.entity(), context, String.class, "System");
             String message = "CRITICAL ERROR: " + e.getMessage() + " | " + resolve(auditAnnotation.message(), context, String.class, "");
             UUID entityId = resolveIdAsUuid(auditAnnotation.entityId(), context);
             ProjectDTO project = resolve(auditAnnotation.project(), context, ProjectDTO.class, null);
 
-            // 8. Log Failure to Database
             auditService.log(action, entityName, entityId, LogLevel.ERROR, message, project, null);
-
-            // 9. Rethrow so the transaction rolls back correctly
             throw e;
         }
     }
 
-    /**
-     * Resolves an ID from SpEL and safely converts Long/String to UUID for the Audit Service.
-     */
     private UUID resolveIdAsUuid(String expression, StandardEvaluationContext context) {
-        if (expression == null || expression.isEmpty()) return null;
+        if (expression == null || expression.isEmpty()) {
+            return null;
+        }
         try {
             Object val = parser.parseExpression(expression).getValue(context);
-            if (val instanceof UUID) return (UUID) val;
-            if (val instanceof Long) return new UUID(0L, (Long) val);
-            if (val instanceof String) return UUID.fromString((String) val);
+            if (val instanceof UUID uuid) {
+                return uuid;
+            }
+            if (val instanceof Long longVal) {
+                return new UUID(0L, longVal);
+            }
+            if (val instanceof String stringVal) {
+                return UUID.fromString(stringVal);
+            }
             return null;
         } catch (Exception e) {
             return null;
@@ -109,7 +103,9 @@ public class AuditAspect {
     }
 
     private <T> T resolve(String expression, StandardEvaluationContext context, Class<T> clazz, T defaultValue) {
-        if (expression == null || expression.isEmpty()) return defaultValue;
+        if (expression == null || expression.isEmpty()) {
+            return defaultValue;
+        }
         try {
             T value = parser.parseExpression(expression).getValue(context, clazz);
             return value != null ? value : defaultValue;
