@@ -52,7 +52,7 @@ export class AuditLogsService {
 export class AuditLogService extends AuditLogsService {
   protected readonly http = inject(HttpClient);
 
-  find(id: number): Observable<IAuditLog> {
+  find(id: string): Observable<IAuditLog> {
     return this.http
       .get<RestAuditLog>(`${this.resourceUrl}/${encodeURIComponent(id)}`)
       .pipe(map(res => this.convertResponseFromServer(res)));
@@ -73,7 +73,7 @@ export class AuditLogService extends AuditLogsService {
     );
   }
 
-  getAuditLogIdentifier(auditLog: Pick<IAuditLog, 'id'>): number {
+  getAuditLogIdentifier(auditLog: Pick<IAuditLog, 'id'>): string {
     return auditLog.id;
   }
 

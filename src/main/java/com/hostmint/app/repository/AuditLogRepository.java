@@ -3,6 +3,7 @@ package com.hostmint.app.repository;
 import com.hostmint.app.domain.AuditLog;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.*;
@@ -13,11 +14,11 @@ import org.springframework.stereotype.Repository;
  * Spring Data JPA repository for the AuditLog entity.
  */
 @Repository
-public interface AuditLogRepository extends JpaRepository<AuditLog, Long>, JpaSpecificationExecutor<AuditLog> {
+public interface AuditLogRepository extends JpaRepository<AuditLog, UUID>, JpaSpecificationExecutor<AuditLog> {
     @Query("select auditLog from AuditLog auditLog where auditLog.actor.login = ?#{authentication.name}")
     List<AuditLog> findByActorIsCurrentUser();
 
-    default Optional<AuditLog> findOneWithEagerRelationships(Long id) {
+    default Optional<AuditLog> findOneWithEagerRelationships(UUID id) {
         return this.findOneWithToOneRelationships(id);
     }
 
@@ -39,5 +40,5 @@ public interface AuditLogRepository extends JpaRepository<AuditLog, Long>, JpaSp
     List<AuditLog> findAllWithToOneRelationships();
 
     @Query("select auditLog from AuditLog auditLog left join fetch auditLog.actor left join fetch auditLog.project where auditLog.id =:id")
-    Optional<AuditLog> findOneWithToOneRelationships(@Param("id") Long id);
+    Optional<AuditLog> findOneWithToOneRelationships(@Param("id") UUID id);
 }

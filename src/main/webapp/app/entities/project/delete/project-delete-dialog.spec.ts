@@ -31,10 +31,10 @@ describe('Project Management Delete Component', () => {
       vitest.spyOn(mockActiveModal, 'close');
 
       // WHEN
-      comp.confirmDelete(123);
+      comp.confirmDelete('9fec3727-3421-4967-b213-ba36557ca194');
 
       // THEN
-      expect(service.delete).toHaveBeenCalledWith(123);
+      expect(service.delete).toHaveBeenCalledWith('9fec3727-3421-4967-b213-ba36557ca194');
       expect(mockActiveModal.close).toHaveBeenCalledWith('deleted');
     });
 

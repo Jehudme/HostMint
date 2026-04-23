@@ -61,7 +61,7 @@ export class UserManagement implements OnInit {
     this.userService.update({ ...userManagement, activated: isActivated }).subscribe(() => this.loadAll());
   }
 
-  trackIdentity(item: IUserManagement): number {
+  trackIdentity(item: IUserManagement): string {
     return item.id!;
   }
 

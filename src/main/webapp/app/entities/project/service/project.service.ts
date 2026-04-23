@@ -79,7 +79,7 @@ export class ProjectService extends ProjectsService {
       .pipe(map(res => this.convertResponseFromServer(res)));
   }
 
-  find(id: number): Observable<IProject> {
+  find(id: string): Observable<IProject> {
     return this.http
       .get<RestProject>(`${this.resourceUrl}/${encodeURIComponent(id)}`)
       .pipe(map(res => this.convertResponseFromServer(res)));
@@ -92,7 +92,7 @@ export class ProjectService extends ProjectsService {
       .pipe(map(res => res.clone({ body: this.convertResponseArrayFromServer(res.body!) })));
   }
 
-  delete(id: number): Observable<undefined> {
+  delete(id: string): Observable<undefined> {
     return this.http.delete<undefined>(`${this.resourceUrl}/${encodeURIComponent(id)}`);
   }
 
@@ -104,7 +104,7 @@ export class ProjectService extends ProjectsService {
     );
   }
 
-  getProjectIdentifier(project: Pick<IProject, 'id'>): number {
+  getProjectIdentifier(project: Pick<IProject, 'id'>): string {
     return project.id;
   }
 

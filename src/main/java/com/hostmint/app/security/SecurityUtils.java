@@ -2,6 +2,7 @@ package com.hostmint.app.security;
 
 import java.util.Arrays;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Stream;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -65,7 +66,7 @@ public final class SecurityUtils {
      *
      * @return the Id of the current user.
      */
-    public static Optional<Long> getCurrentUserId() {
+    public static Optional<UUID> getCurrentUserId() {
         SecurityContext securityContext = SecurityContextHolder.getContext();
         return Optional.ofNullable(securityContext.getAuthentication())
             .filter(authentication -> authentication.getPrincipal() instanceof ClaimAccessor)

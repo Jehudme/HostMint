@@ -35,7 +35,6 @@ public class InternalAuditServiceImpl implements InternalAuditService {
 
     @Override
     public void log(String action, String entityName, LogLevel level, String message, ProjectDTO project) {
-        // Here, entityId is null because Project uses a Long ID, but the project relationship is set
         log(action, entityName, null, level, message, project, null);
     }
 
@@ -45,8 +44,35 @@ public class InternalAuditServiceImpl implements InternalAuditService {
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Transactional(propagation = Propagation.REQUIRED) // Success cases join the active transaction
     public void log(String action, String entityName, UUID entityId, LogLevel level, String message, ProjectDTO project, String metadata) {
+        executeLogSave(action, entityName, entityId, level, message, project, metadata);
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW) // Failure cases open a new, safe transaction
+    public void logFailure(
+        String action,
+        String entityName,
+        UUID entityId,
+        LogLevel level,
+        String message,
+        ProjectDTO project,
+        String metadata
+    ) {
+        executeLogSave(action, entityName, entityId, level, message, project, metadata);
+    }
+
+    // Extracted the core logic into a private method so both log and logFailure can reuse it
+    private void executeLogSave(
+        String action,
+        String entityName,
+        UUID entityId,
+        LogLevel level,
+        String message,
+        ProjectDTO project,
+        String metadata
+    ) {
         try {
             AuditLogDTO dto = new AuditLogDTO();
 

@@ -7,6 +7,7 @@ import com.hostmint.app.service.dto.RequestLogDTO;
 import com.hostmint.app.web.rest.errors.ElasticsearchExceptionMapper;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -74,7 +75,7 @@ public class RequestLogResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the requestLogDTO, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/{id}")
-    public ResponseEntity<RequestLogDTO> getRequestLog(@PathVariable("id") Long id) {
+    public ResponseEntity<RequestLogDTO> getRequestLog(@PathVariable("id") UUID id) {
         LOG.debug("REST request to get RequestLog : {}", id);
         Optional<RequestLogDTO> requestLogDTO = requestLogService.findOne(id);
         return ResponseUtil.wrapOrNotFound(requestLogDTO);

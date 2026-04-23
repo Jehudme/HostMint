@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.time.Instant;
 import java.util.Collections;
 import java.util.Optional;
+import java.util.UUID;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -46,7 +47,7 @@ class SecurityUtilsUnitTest {
 
     @Test
     void testGetCurrentUserId() {
-        var userId = 1L;
+        var userId = UUID.randomUUID();
         var securityContext = SecurityContextHolder.createEmptyContext();
         var now = Instant.now();
         var jwt = Jwt.withTokenValue("token")

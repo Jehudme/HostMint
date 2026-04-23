@@ -42,7 +42,7 @@ public class RequestLogCriteria implements Serializable, Criteria {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    private LongFilter id;
+    private UUIDFilter id;
 
     private StringFilter correlationId;
 
@@ -64,16 +64,16 @@ public class RequestLogCriteria implements Serializable, Criteria {
 
     private InstantFilter createdAt;
 
-    private LongFilter actorId;
+    private UUIDFilter actorId;
 
-    private LongFilter projectId;
+    private UUIDFilter projectId;
 
     private Boolean distinct;
 
     public RequestLogCriteria() {}
 
     public RequestLogCriteria(RequestLogCriteria other) {
-        this.id = other.optionalId().map(LongFilter::copy).orElse(null);
+        this.id = other.optionalId().map(UUIDFilter::copy).orElse(null);
         this.correlationId = other.optionalCorrelationId().map(StringFilter::copy).orElse(null);
         this.method = other.optionalMethod().map(HttpMethodFilter::copy).orElse(null);
         this.path = other.optionalPath().map(StringFilter::copy).orElse(null);
@@ -84,8 +84,8 @@ public class RequestLogCriteria implements Serializable, Criteria {
         this.errorCode = other.optionalErrorCode().map(StringFilter::copy).orElse(null);
         this.errorMessage = other.optionalErrorMessage().map(StringFilter::copy).orElse(null);
         this.createdAt = other.optionalCreatedAt().map(InstantFilter::copy).orElse(null);
-        this.actorId = other.optionalActorId().map(LongFilter::copy).orElse(null);
-        this.projectId = other.optionalProjectId().map(LongFilter::copy).orElse(null);
+        this.actorId = other.optionalActorId().map(UUIDFilter::copy).orElse(null);
+        this.projectId = other.optionalProjectId().map(UUIDFilter::copy).orElse(null);
         this.distinct = other.distinct;
     }
 
@@ -94,22 +94,22 @@ public class RequestLogCriteria implements Serializable, Criteria {
         return new RequestLogCriteria(this);
     }
 
-    public LongFilter getId() {
+    public UUIDFilter getId() {
         return id;
     }
 
-    public Optional<LongFilter> optionalId() {
+    public Optional<UUIDFilter> optionalId() {
         return Optional.ofNullable(id);
     }
 
-    public LongFilter id() {
+    public UUIDFilter id() {
         if (id == null) {
-            setId(new LongFilter());
+            setId(new UUIDFilter());
         }
         return id;
     }
 
-    public void setId(LongFilter id) {
+    public void setId(UUIDFilter id) {
         this.id = id;
     }
 
@@ -303,41 +303,41 @@ public class RequestLogCriteria implements Serializable, Criteria {
         this.createdAt = createdAt;
     }
 
-    public LongFilter getActorId() {
+    public UUIDFilter getActorId() {
         return actorId;
     }
 
-    public Optional<LongFilter> optionalActorId() {
+    public Optional<UUIDFilter> optionalActorId() {
         return Optional.ofNullable(actorId);
     }
 
-    public LongFilter actorId() {
+    public UUIDFilter actorId() {
         if (actorId == null) {
-            setActorId(new LongFilter());
+            setActorId(new UUIDFilter());
         }
         return actorId;
     }
 
-    public void setActorId(LongFilter actorId) {
+    public void setActorId(UUIDFilter actorId) {
         this.actorId = actorId;
     }
 
-    public LongFilter getProjectId() {
+    public UUIDFilter getProjectId() {
         return projectId;
     }
 
-    public Optional<LongFilter> optionalProjectId() {
+    public Optional<UUIDFilter> optionalProjectId() {
         return Optional.ofNullable(projectId);
     }
 
-    public LongFilter projectId() {
+    public UUIDFilter projectId() {
         if (projectId == null) {
-            setProjectId(new LongFilter());
+            setProjectId(new UUIDFilter());
         }
         return projectId;
     }
 
-    public void setProjectId(LongFilter projectId) {
+    public void setProjectId(UUIDFilter projectId) {
         this.projectId = projectId;
     }
 

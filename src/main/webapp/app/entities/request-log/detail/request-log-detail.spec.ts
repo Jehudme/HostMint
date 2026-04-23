@@ -23,7 +23,7 @@ describe('RequestLog Management Detail Component', () => {
             {
               path: '**',
               loadComponent: () => import('./request-log-detail').then(m => m.RequestLogDetail),
-              resolve: { requestLog: () => of({ id: 28326 }) },
+              resolve: { requestLog: () => of({ id: 'de9710de-1bd5-4400-bdcf-76c3ff212f00' }) },
             },
           ],
           withComponentInputBinding(),
@@ -46,7 +46,7 @@ describe('RequestLog Management Detail Component', () => {
       const instance = await harness.navigateByUrl('/', RequestLogDetail);
 
       // THEN
-      expect(instance.requestLog()).toEqual(expect.objectContaining({ id: 28326 }));
+      expect(instance.requestLog()).toEqual(expect.objectContaining({ id: 'de9710de-1bd5-4400-bdcf-76c3ff212f00' }));
     });
   });
 

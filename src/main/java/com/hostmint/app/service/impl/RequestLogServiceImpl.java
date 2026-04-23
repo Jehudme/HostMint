@@ -7,6 +7,7 @@ import com.hostmint.app.service.RequestLogService;
 import com.hostmint.app.service.dto.RequestLogDTO;
 import com.hostmint.app.service.mapper.RequestLogMapper;
 import java.util.Optional;
+import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -82,13 +83,13 @@ public class RequestLogServiceImpl implements RequestLogService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<RequestLogDTO> findOne(Long id) {
+    public Optional<RequestLogDTO> findOne(UUID id) {
         LOG.debug("Request to get RequestLog : {}", id);
         return requestLogRepository.findOneWithEagerRelationships(id).map(requestLogMapper::toDto);
     }
 
     @Override
-    public void delete(Long id) {
+    public void delete(UUID id) {
         LOG.debug("Request to delete RequestLog : {}", id);
         requestLogRepository.deleteById(id);
         requestLogSearchRepository.deleteFromIndexById(id);

@@ -1,5 +1,6 @@
 /**
  * HostMint Application Configuration
+ * Package: com.hostmint.app
  */
 application {
   config {
@@ -18,66 +19,64 @@ application {
     searchEngine elasticsearch
     testFrameworks [cypress]
     serviceDiscoveryType no
+    // Note: pkType must be set in .yo-rc.json, not here in JDL config for v9
   }
   entities Project, AuditLog, RequestLog
 }
 
-/**
- * Deployment Configuration for Linux Mint / Ubuntu Server
- */
-deployment {
-  deploymentType docker-compose
-  dockerRepositoryName "ghcr.io/jehudme/hostmint"
-}
+/* ---------------------------------------------------------
+   GLOBAL DIRECTIVES
+   --------------------------------------------------------- */
+
+// Use UUID for all primary keys
+use UUID for *
 
 /* ---------------------------------------------------------
    ENTITIES
    --------------------------------------------------------- */
 
-use UUID for *
-
-enum LogLevel {
-    INFO, WARN, ERROR, DEBUG, TRACE
-}
-
-enum HttpMethod {
-    GET, POST, PUT, DELETE, PATCH, HEAD, OPTIONS
-}
-
 entity Project {
-    name String required minlength(2) maxlength(140)
-    projectKey String required unique minlength(2) maxlength(20) pattern(/^[A-Z0-9_]+$/)
-    createdAt Instant
-    updatedAt Instant
+  name String required minlength(2) maxlength(140)
+  projectKey String required unique minlength(2) maxlength(20) pattern(/^[A-Z0-9_]+$/)
+  createdAt Instant
+  updatedAt Instant
 }
 
 @readOnly
 entity AuditLog {
-    action String required maxlength(120)
-    entityName String required maxlength(120)
-    entityId UUID
-    level LogLevel required
-    message String required maxlength(1000)
-    principal String maxlength(255)
-    correlationId String required maxlength(128)
-    ipAddress String maxlength(64)
-    userAgent String maxlength(500)
-    metadata TextBlob
-    createdAt Instant
+  action String required maxlength(120)
+  entityName String required maxlength(120)
+  entityId UUID
+  level LogLevel required
+  message String required maxlength(1000)
+  principal String maxlength(255)
+  correlationId String required maxlength(128)
+  ipAddress String maxlength(64)
+  userAgent String maxlength(500)
+  metadata TextBlob
+  createdAt Instant
 }
 
 @readOnly
 entity RequestLog {
-    correlationId String required maxlength(128)
-    method HttpMethod required
-    path String required maxlength(500)
-    statusCode Integer required min(100) max(599)
-    durationMs Long required min(0)
-    principal String maxlength(255)
-    ipAddress String maxlength(64)
-    errorCode String maxlength(120)
-    errorMessage String maxlength(1000)
-    createdAt Instant
+  correlationId String required maxlength(128)
+  method HttpMethod required
+  path String required maxlength(500)
+  statusCode Integer required min(100) max(599)
+  durationMs Long required min(0)
+  principal String maxlength(255)
+  ipAddress String maxlength(64)
+  errorCode String maxlength(120)
+  errorMessage String maxlength(1000)
+  createdAt Instant
+}
+
+enum LogLevel {
+  INFO, WARN, ERROR, DEBUG, TRACE
+}
+
+enum HttpMethod {
+  GET, POST, PUT, DELETE, PATCH, HEAD, OPTIONS
 }
 
 /* ---------------------------------------------------------
@@ -85,11 +84,11 @@ entity RequestLog {
    --------------------------------------------------------- */
 
 relationship ManyToOne {
-    Project{owner(login) required} to User with builtInEntity
-    AuditLog{actor(login)} to User with builtInEntity
-    RequestLog{actor(login)} to User with builtInEntity
-    AuditLog{project(projectKey)} to Project
-    RequestLog{project(projectKey)} to Project
+  Project{owner(login) required} to User with builtInEntity
+  AuditLog{actor(login)} to User with builtInEntity
+  RequestLog{actor(login)} to User with builtInEntity
+  AuditLog{project(projectKey)} to Project
+  RequestLog{project(projectKey)} to Project
 }
 
 /* ---------------------------------------------------------
@@ -98,6 +97,7 @@ relationship ManyToOne {
 
 dto * with mapstruct
 service * with serviceImpl
+// FIX: Using 'paginate' keyword instead of 'pagination' to satisfy the parser
 paginate * with pagination
 filter *
 search Project, AuditLog, RequestLog with elasticsearch

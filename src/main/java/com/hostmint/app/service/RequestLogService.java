@@ -2,6 +2,7 @@ package com.hostmint.app.service;
 
 import com.hostmint.app.service.dto.RequestLogDTO;
 import java.util.Optional;
+import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -47,14 +48,14 @@ public interface RequestLogService {
      * @param id the id of the entity.
      * @return the entity.
      */
-    Optional<RequestLogDTO> findOne(Long id);
+    Optional<RequestLogDTO> findOne(UUID id);
 
     /**
      * Delete the "id" requestLog.
      *
      * @param id the id of the entity.
      */
-    void delete(Long id);
+    void delete(UUID id);
 
     /**
      * Search for the requestLog corresponding to the query.

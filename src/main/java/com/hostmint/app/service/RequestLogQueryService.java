@@ -81,7 +81,7 @@ public class RequestLogQueryService extends QueryService<RequestLog> {
             // This has to be called first, because the distinct method returns null
             specification = Specification.allOf(
                 Boolean.TRUE.equals(criteria.getDistinct()) ? distinct(criteria.getDistinct()) : Specification.unrestricted(),
-                buildRangeSpecification(criteria.getId(), RequestLog_.id),
+                buildSpecification(criteria.getId(), RequestLog_.id),
                 buildStringSpecification(criteria.getCorrelationId(), RequestLog_.correlationId),
                 buildSpecification(criteria.getMethod(), RequestLog_.method),
                 buildStringSpecification(criteria.getPath(), RequestLog_.path),

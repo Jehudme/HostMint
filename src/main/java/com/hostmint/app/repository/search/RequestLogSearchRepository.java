@@ -4,6 +4,7 @@ import co.elastic.clients.elasticsearch._types.query_dsl.QueryStringQuery;
 import com.hostmint.app.domain.RequestLog;
 import com.hostmint.app.repository.RequestLogRepository;
 import java.util.List;
+import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -18,7 +19,7 @@ import org.springframework.scheduling.annotation.Async;
 /**
  * Spring Data Elasticsearch repository for the {@link RequestLog} entity.
  */
-public interface RequestLogSearchRepository extends ElasticsearchRepository<RequestLog, Long>, RequestLogSearchRepositoryInternal {}
+public interface RequestLogSearchRepository extends ElasticsearchRepository<RequestLog, UUID>, RequestLogSearchRepositoryInternal {}
 
 interface RequestLogSearchRepositoryInternal {
     Page<RequestLog> search(String query, Pageable pageable);
@@ -29,7 +30,7 @@ interface RequestLogSearchRepositoryInternal {
     void index(RequestLog entity);
 
     @Async
-    void deleteFromIndexById(Long id);
+    void deleteFromIndexById(UUID id);
 }
 
 class RequestLogSearchRepositoryInternalImpl implements RequestLogSearchRepositoryInternal {
@@ -61,7 +62,7 @@ class RequestLogSearchRepositoryInternalImpl implements RequestLogSearchReposito
     }
 
     @Override
-    public void deleteFromIndexById(Long id) {
+    public void deleteFromIndexById(UUID id) {
         elasticsearchTemplate.delete(String.valueOf(id), RequestLog.class);
     }
 }

@@ -32,7 +32,7 @@ describe('Project Service', () => {
       const returnedFromService = { ...requireRestSample };
       const expected = { ...sampleWithRequiredData };
 
-      service.find(123).subscribe(resp => (expectedResult = resp));
+      service.find('9fec3727-3421-4967-b213-ba36557ca194').subscribe(resp => (expectedResult = resp));
 
       const req = httpMock.expectOne({ method: 'GET' });
       req.flush(returnedFromService);
@@ -89,7 +89,7 @@ describe('Project Service', () => {
     });
 
     it('should delete a Project', () => {
-      service.delete(123).subscribe();
+      service.delete('9fec3727-3421-4967-b213-ba36557ca194').subscribe();
 
       const requests = httpMock.match({ method: 'DELETE' });
       expect(requests.length).toBe(1);
@@ -174,7 +174,7 @@ describe('Project Service', () => {
       });
 
       it('should return false if one entity is null', () => {
-        const entity1 = { id: 10300 };
+        const entity1 = { id: '517762c3-0447-46f7-b25c-62db5ed7b0aa' };
         const entity2 = null;
 
         const compareResult1 = service.compareProject(entity1, entity2);
@@ -185,8 +185,8 @@ describe('Project Service', () => {
       });
 
       it('should return false if primaryKey differs', () => {
-        const entity1 = { id: 10300 };
-        const entity2 = { id: 3319 };
+        const entity1 = { id: '517762c3-0447-46f7-b25c-62db5ed7b0aa' };
+        const entity2 = { id: '5ff6b3ae-e7f8-4d04-a538-babd8e1e0e80' };
 
         const compareResult1 = service.compareProject(entity1, entity2);
         const compareResult2 = service.compareProject(entity2, entity1);
@@ -196,8 +196,8 @@ describe('Project Service', () => {
       });
 
       it('should return false if primaryKey matches', () => {
-        const entity1 = { id: 10300 };
-        const entity2 = { id: 10300 };
+        const entity1 = { id: '517762c3-0447-46f7-b25c-62db5ed7b0aa' };
+        const entity2 = { id: '517762c3-0447-46f7-b25c-62db5ed7b0aa' };
 
         const compareResult1 = service.compareProject(entity1, entity2);
         const compareResult2 = service.compareProject(entity2, entity1);

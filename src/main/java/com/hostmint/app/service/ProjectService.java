@@ -2,6 +2,7 @@ package com.hostmint.app.service;
 
 import com.hostmint.app.service.dto.ProjectDTO;
 import java.util.Optional;
+import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -47,14 +48,14 @@ public interface ProjectService {
      * @param id the id of the entity.
      * @return the entity.
      */
-    Optional<ProjectDTO> findOne(Long id);
+    Optional<ProjectDTO> findOne(UUID id);
 
     /**
      * Delete the "id" project.
      *
      * @param id the id of the entity.
      */
-    void delete(Long id);
+    void delete(UUID id);
 
     /**
      * Search for the project corresponding to the query.

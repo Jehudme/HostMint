@@ -31,7 +31,7 @@ describe('RequestLog Service', () => {
       const returnedFromService = { ...requireRestSample };
       const expected = { ...sampleWithRequiredData };
 
-      service.find(123).subscribe(resp => (expectedResult = resp));
+      service.find('9fec3727-3421-4967-b213-ba36557ca194').subscribe(resp => (expectedResult = resp));
 
       const req = httpMock.expectOne({ method: 'GET' });
       req.flush(returnedFromService);
@@ -130,7 +130,7 @@ describe('RequestLog Service', () => {
       });
 
       it('should return false if one entity is null', () => {
-        const entity1 = { id: 28326 };
+        const entity1 = { id: 'de9710de-1bd5-4400-bdcf-76c3ff212f00' };
         const entity2 = null;
 
         const compareResult1 = service.compareRequestLog(entity1, entity2);
@@ -141,8 +141,8 @@ describe('RequestLog Service', () => {
       });
 
       it('should return false if primaryKey differs', () => {
-        const entity1 = { id: 28326 };
-        const entity2 = { id: 30287 };
+        const entity1 = { id: 'de9710de-1bd5-4400-bdcf-76c3ff212f00' };
+        const entity2 = { id: '0b816ab7-ef0c-4981-aa20-325989371403' };
 
         const compareResult1 = service.compareRequestLog(entity1, entity2);
         const compareResult2 = service.compareRequestLog(entity2, entity1);
@@ -152,8 +152,8 @@ describe('RequestLog Service', () => {
       });
 
       it('should return false if primaryKey matches', () => {
-        const entity1 = { id: 28326 };
-        const entity2 = { id: 28326 };
+        const entity1 = { id: 'de9710de-1bd5-4400-bdcf-76c3ff212f00' };
+        const entity2 = { id: 'de9710de-1bd5-4400-bdcf-76c3ff212f00' };
 
         const compareResult1 = service.compareRequestLog(entity1, entity2);
         const compareResult2 = service.compareRequestLog(entity2, entity1);

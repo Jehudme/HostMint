@@ -14,7 +14,7 @@ import java.util.UUID;
 @SuppressWarnings("common-java:DuplicatedBlocks")
 public class AuditLogDTO implements Serializable {
 
-    private Long id;
+    private UUID id;
 
     @NotNull
     @Size(max = 120)
@@ -55,11 +55,11 @@ public class AuditLogDTO implements Serializable {
 
     private ProjectDTO project;
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
@@ -192,7 +192,7 @@ public class AuditLogDTO implements Serializable {
     @Override
     public String toString() {
         return "AuditLogDTO{" +
-            "id=" + getId() +
+            "id='" + getId() + "'" +
             ", action='" + getAction() + "'" +
             ", entityName='" + getEntityName() + "'" +
             ", entityId='" + getEntityId() + "'" +

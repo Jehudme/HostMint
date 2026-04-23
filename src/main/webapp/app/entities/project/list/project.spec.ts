@@ -75,12 +75,14 @@ describe('Project Management Component', () => {
     // WHEN
     TestBed.tick();
     const req = httpMock.expectOne({ method: 'GET' });
-    req.flush([{ id: 10300 }], { headers: { link: '<http://localhost/api/foo?page=1&size=20>; rel="next"' } });
+    req.flush([{ id: '517762c3-0447-46f7-b25c-62db5ed7b0aa' }], {
+      headers: { link: '<http://localhost/api/foo?page=1&size=20>; rel="next"' },
+    });
     await vitest.runAllTimersAsync();
 
     // THEN
     expect(comp.isLoading()).toEqual(false);
-    expect(comp.projects()[0]).toEqual(expect.objectContaining({ id: 10300 }));
+    expect(comp.projects()[0]).toEqual(expect.objectContaining({ id: '517762c3-0447-46f7-b25c-62db5ed7b0aa' }));
   });
 
   it('should cancel previous requests when loading a new page', async () => {
@@ -93,13 +95,15 @@ describe('Project Management Component', () => {
     comp.load();
     await vitest.runAllTimersAsync();
     const req2 = httpMock.expectOne({ method: 'GET' });
-    req2.flush([{ id: 10300 }], { headers: { link: '<http://localhost/api/foo?page=1&size=20>; rel="next"' } });
+    req2.flush([{ id: '517762c3-0447-46f7-b25c-62db5ed7b0aa' }], {
+      headers: { link: '<http://localhost/api/foo?page=1&size=20>; rel="next"' },
+    });
     await vitest.runAllTimersAsync();
 
     // THEN
     expect(req.cancelled).toBeTruthy();
     expect(comp.isLoading()).toEqual(false);
-    expect(comp.projects()[0]).toEqual(expect.objectContaining({ id: 10300 }));
+    expect(comp.projects()[0]).toEqual(expect.objectContaining({ id: '517762c3-0447-46f7-b25c-62db5ed7b0aa' }));
   });
 
   it('should not fail on resource error state', async () => {
@@ -117,16 +121,18 @@ describe('Project Management Component', () => {
     comp.load();
     TestBed.tick();
     const successReq = httpMock.expectOne({ method: 'GET' });
-    successReq.flush([{ id: 10300 }], { headers: { link: '<http://localhost/api/foo?page=1&size=20>; rel="next"' } });
+    successReq.flush([{ id: '517762c3-0447-46f7-b25c-62db5ed7b0aa' }], {
+      headers: { link: '<http://localhost/api/foo?page=1&size=20>; rel="next"' },
+    });
     await vitest.runAllTimersAsync();
 
     // THEN - subscription is still alive and second load succeeds
-    expect(comp.projects()[0]).toEqual(expect.objectContaining({ id: 10300 }));
+    expect(comp.projects()[0]).toEqual(expect.objectContaining({ id: '517762c3-0447-46f7-b25c-62db5ed7b0aa' }));
   });
 
   describe('trackId', () => {
     it('should forward to projectService', () => {
-      const entity = { id: 10300 };
+      const entity = { id: '517762c3-0447-46f7-b25c-62db5ed7b0aa' };
       vitest.spyOn(service, 'getProjectIdentifier');
       const id = comp.trackId(entity);
       expect(service.getProjectIdentifier).toHaveBeenCalledWith(entity);

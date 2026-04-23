@@ -5,6 +5,7 @@ import jakarta.validation.constraints.*;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.Objects;
+import java.util.UUID;
 
 /**
  * A DTO for the {@link com.hostmint.app.domain.RequestLog} entity.
@@ -12,7 +13,7 @@ import java.util.Objects;
 @SuppressWarnings("common-java:DuplicatedBlocks")
 public class RequestLogDTO implements Serializable {
 
-    private Long id;
+    private UUID id;
 
     @NotNull
     @Size(max = 128)
@@ -52,11 +53,11 @@ public class RequestLogDTO implements Serializable {
 
     private ProjectDTO project;
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
@@ -181,7 +182,7 @@ public class RequestLogDTO implements Serializable {
     @Override
     public String toString() {
         return "RequestLogDTO{" +
-            "id=" + getId() +
+            "id='" + getId() + "'" +
             ", correlationId='" + getCorrelationId() + "'" +
             ", method='" + getMethod() + "'" +
             ", path='" + getPath() + "'" +

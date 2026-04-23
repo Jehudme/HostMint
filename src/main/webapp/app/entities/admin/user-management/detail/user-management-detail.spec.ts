@@ -25,7 +25,7 @@ describe('User Management Detail Component', () => {
               resolve: {
                 userManagement: () =>
                   of({
-                    id: 123,
+                    id: '9fec3727-3421-4967-b213-ba36557ca194',
                     login: 'user',
                     firstName: 'first',
                     lastName: 'last',
@@ -56,7 +56,7 @@ describe('User Management Detail Component', () => {
       // THEN
       expect(instance.userManagement()).toEqual(
         expect.objectContaining({
-          id: 123,
+          id: '9fec3727-3421-4967-b213-ba36557ca194',
           login: 'user',
           firstName: 'first',
           lastName: 'last',

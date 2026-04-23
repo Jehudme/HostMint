@@ -25,7 +25,7 @@ describe('User Management Update Component', () => {
           useValue: {
             data: of({
               user: {
-                id: 123,
+                id: '9fec3727-3421-4967-b213-ba36557ca194',
                 login: 'user',
                 firstName: 'first',
                 lastName: 'last',
@@ -51,7 +51,7 @@ describe('User Management Update Component', () => {
   describe('save', () => {
     it('should call update service on save for existing user', inject([], () => {
       // GIVEN
-      const entity = { id: 123 } as IUserManagement;
+      const entity = { id: '9fec3727-3421-4967-b213-ba36557ca194' } as IUserManagement;
       vitest.spyOn(service, 'update').mockReturnValue(of(entity));
       comp.editForm.patchValue(entity);
       // WHEN

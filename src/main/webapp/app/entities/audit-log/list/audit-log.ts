@@ -43,6 +43,7 @@ import { AuditLogService } from '../service/audit-log.service';
 })
 export class AuditLog implements OnInit {
   private static readonly NOT_SORTABLE_FIELDS_AFTER_SEARCH = [
+    'id',
     'action',
     'entityName',
     'entityId',
@@ -97,7 +98,7 @@ export class AuditLog implements OnInit {
     });
   }
 
-  trackId = (item: IAuditLog): number => this.auditLogService.getAuditLogIdentifier(item);
+  trackId = (item: IAuditLog): string => this.auditLogService.getAuditLogIdentifier(item);
 
   ngOnInit(): void {
     this.subscription = combineLatest([this.activatedRoute.queryParamMap, this.activatedRoute.data])
@@ -120,7 +121,7 @@ export class AuditLog implements OnInit {
   }
 
   getDefaultSortState(): SortState {
-    return this.sortService.parseSortParam(this.activatedRoute.snapshot.data[DEFAULT_SORT_DATA]);
+    return {};
   }
 
   byteSize(base64String: string): string {

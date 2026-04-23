@@ -73,12 +73,14 @@ describe('RequestLog Management Component', () => {
     // WHEN
     TestBed.tick();
     const req = httpMock.expectOne({ method: 'GET' });
-    req.flush([{ id: 28326 }], { headers: { link: '<http://localhost/api/foo?page=1&size=20>; rel="next"' } });
+    req.flush([{ id: 'de9710de-1bd5-4400-bdcf-76c3ff212f00' }], {
+      headers: { link: '<http://localhost/api/foo?page=1&size=20>; rel="next"' },
+    });
     await vitest.runAllTimersAsync();
 
     // THEN
     expect(comp.isLoading()).toEqual(false);
-    expect(comp.requestLogs()[0]).toEqual(expect.objectContaining({ id: 28326 }));
+    expect(comp.requestLogs()[0]).toEqual(expect.objectContaining({ id: 'de9710de-1bd5-4400-bdcf-76c3ff212f00' }));
   });
 
   it('should cancel previous requests when loading a new page', async () => {
@@ -91,13 +93,15 @@ describe('RequestLog Management Component', () => {
     comp.load();
     await vitest.runAllTimersAsync();
     const req2 = httpMock.expectOne({ method: 'GET' });
-    req2.flush([{ id: 28326 }], { headers: { link: '<http://localhost/api/foo?page=1&size=20>; rel="next"' } });
+    req2.flush([{ id: 'de9710de-1bd5-4400-bdcf-76c3ff212f00' }], {
+      headers: { link: '<http://localhost/api/foo?page=1&size=20>; rel="next"' },
+    });
     await vitest.runAllTimersAsync();
 
     // THEN
     expect(req.cancelled).toBeTruthy();
     expect(comp.isLoading()).toEqual(false);
-    expect(comp.requestLogs()[0]).toEqual(expect.objectContaining({ id: 28326 }));
+    expect(comp.requestLogs()[0]).toEqual(expect.objectContaining({ id: 'de9710de-1bd5-4400-bdcf-76c3ff212f00' }));
   });
 
   it('should not fail on resource error state', async () => {
@@ -115,16 +119,18 @@ describe('RequestLog Management Component', () => {
     comp.load();
     TestBed.tick();
     const successReq = httpMock.expectOne({ method: 'GET' });
-    successReq.flush([{ id: 28326 }], { headers: { link: '<http://localhost/api/foo?page=1&size=20>; rel="next"' } });
+    successReq.flush([{ id: 'de9710de-1bd5-4400-bdcf-76c3ff212f00' }], {
+      headers: { link: '<http://localhost/api/foo?page=1&size=20>; rel="next"' },
+    });
     await vitest.runAllTimersAsync();
 
     // THEN - subscription is still alive and second load succeeds
-    expect(comp.requestLogs()[0]).toEqual(expect.objectContaining({ id: 28326 }));
+    expect(comp.requestLogs()[0]).toEqual(expect.objectContaining({ id: 'de9710de-1bd5-4400-bdcf-76c3ff212f00' }));
   });
 
   describe('trackId', () => {
     it('should forward to requestLogService', () => {
-      const entity = { id: 28326 };
+      const entity = { id: 'de9710de-1bd5-4400-bdcf-76c3ff212f00' };
       vitest.spyOn(service, 'getRequestLogIdentifier');
       const id = comp.trackId(entity);
       expect(service.getRequestLogIdentifier).toHaveBeenCalledWith(entity);
