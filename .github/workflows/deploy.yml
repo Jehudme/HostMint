@@ -22,6 +22,15 @@ jobs:
           distribution: 'temurin'
           cache: 'maven'
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'npm'
+
+      - name: Install JHipster CLI
+        run: npm install -g generator-jhipster@9.0.0
+
       - name: Cache Jib layers
         uses: actions/cache@v4
         with:
@@ -33,7 +42,30 @@ jobs:
       - name: Make mvnw executable
         run: chmod +x mvnw
 
+      - name: Regenerate from JDL (regen gate)
+        run: |
+          jhipster jdl hostmin.jdl --force
+          DRIFT="$(git status --porcelain)"
+          echo "$DRIFT"
+
+          if [ -n "$DRIFT" ]; then
+            ALLOWED_DRIFT_PATTERN='^ M src/test/java/com/hostmint/app/security/SecurityUtilsUnitTest.java$'
+            UNEXPECTED_DRIFT="$(printf "%s\n" "$DRIFT" | grep -Ev "$ALLOWED_DRIFT_PATTERN|^$" || true)"
+
+            if [ -n "$UNEXPECTED_DRIFT" ]; then
+              echo "::error::Regeneration drift detected after 'jhipster jdl hostmin.jdl --force'."
+              echo "::error::Unexpected changed files:"
+              printf "%s\n" "$UNEXPECTED_DRIFT"
+              echo "::error::Move customizations into non-generated extension files/classes."
+              exit 1
+            fi
+
+            echo "Only known deterministic regen drift was detected; continuing."
+          fi
+
       - name: Build and Push to GHCR
+        env:
+          CYPRESS_INSTALL_BINARY: 0
         run: |
           IMAGE_ID=ghcr.io/${{ github.repository_owner }}/hostmint
           IMAGE_ID=$(echo $IMAGE_ID | tr '[:upper:]' '[:lower:]')
