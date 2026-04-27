@@ -1,6 +1,5 @@
 package com.hostmint.app.aop.audit;
 
-import com.hostmint.app.domain.enumeration.LogLevel;
 import java.lang.annotation.*;
 
 @Target(ElementType.METHOD)
@@ -11,7 +10,7 @@ public @interface Audit {
 
     String entity();
 
-    LogLevel level() default LogLevel.INFO;
+    String level() default "INFO";
 
     String message() default "";
 

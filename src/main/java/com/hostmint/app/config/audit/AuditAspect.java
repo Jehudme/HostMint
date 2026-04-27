@@ -45,7 +45,7 @@ public class AuditAspect {
             UUID entityId = resolveIdAsUuid(auditAnnotation.entityId(), context);
             ProjectDTO project = resolve(auditAnnotation.project(), context, ProjectDTO.class, null);
 
-            auditService.log(action, entityName, entityId, auditAnnotation.level(), message, project, metadata);
+            auditService.log(action, entityName, entityId, LogLevel.valueOf(auditAnnotation.level()), message, project, metadata);
 
             return result;
         } catch (Throwable e) {
